@@ -12,7 +12,7 @@ configure_args="--prefix=/usr
 	--disable-gtk-doc
 	--disable-static"
 
-hostmakedepends="automake gettext-devel libtool intltool pkg-config"
+hostmakedepends="pkg-config intltool autoconf automake libtool gettext-devel-tools glib-devel"
 
 makedepends="NetworkManager-devel glib-devel gnutls-devel gtk+3-devel gtk4-devel libnma-devel libsecret-devel ppp-devel sstp-client-devel"
 
