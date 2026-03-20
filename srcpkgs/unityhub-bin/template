@@ -1,0 +1,34 @@
+# Template file for 'unityhub-bin'
+pkgname=unityhub-bin
+version=3.15.4
+revision=1
+archs="x86_64"
+hostmakedepends="dpkg tar"
+depends="gtk+3 libnotify nss libXScrnSaver libXtst xdg-utils at-spi2-atk at-spi2-core util-linux libsecret p7zip zip unzip tar libayatana-appindicator vulkan-loader libvips"
+short_desc="Unity Hub - official launcher and manager for Unity projects"
+maintainer="Orphaned <orphan@voidlinux.org>"
+license="custom:Proprietary"
+homepage="https://unity.com/"
+distfiles="https://public-cdn.cloud.unity3d.com/hub/prod/UnityHubSetup-${version}-amd64.deb"
+checksum="3bcad1e202d3a098147bc12c4efb24d404a118002c814e1ccb5f942135e2566f"
+nostrip="yes"
+noverifyrdeps="yes"
+
+do_extract() {
+	mkdir -p ${DESTDIR}
+	dpkg-deb -x ${XBPS_SRCDISTDIR}/${pkgname}-${version}/UnityHubSetup-${version}-amd64.deb ${DESTDIR}
+}
+
+do_install() {
+	vlicense ${DESTDIR}/opt/unityhub/resources/hub-license.txt
+	mkdir -p ${DESTDIR}/usr/bin
+	cat > ${DESTDIR}/usr/bin/unityhub << 'EOF'
+#!/bin/sh
+cd /opt/unityhub || exit 1
+exec ./unityhub-bin "$@"
+EOF
+	chmod +x ${DESTDIR}/usr/bin/unityhub
+	ln -sf unityhub ${DESTDIR}/usr/bin/UnityHub
+}
+
+#ignore_shlibs="libvulkan.so.1 libvips-cpp.so.8.17.2"
