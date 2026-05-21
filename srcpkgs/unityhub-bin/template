@@ -1,6 +1,6 @@
 # Template file for 'unityhub-bin'
 pkgname=unityhub-bin
-version=3.15.4
+version=3.18.0
 revision=1
 archs="x86_64"
 hostmakedepends="dpkg tar"
@@ -9,26 +9,36 @@ short_desc="Unity Hub - official launcher and manager for Unity projects"
 maintainer="Orphaned <orphan@voidlinux.org>"
 license="custom:Proprietary"
 homepage="https://unity.com/"
-distfiles="https://public-cdn.cloud.unity3d.com/hub/prod/UnityHubSetup-${version}-amd64.deb"
-checksum="3bcad1e202d3a098147bc12c4efb24d404a118002c814e1ccb5f942135e2566f"
+distfiles="https://hub.unity3d.com/linux/repos/deb/pool/main/u/unity/unityhub_amd64/UnityHubSetup-${version}-amd64.deb"
+checksum="24392617c00dbd6d23e4bfbdda9ad471516a0db5065e4c715193e3b4eab00e59"
 nostrip="yes"
 noverifyrdeps="yes"
 
 do_extract() {
-	mkdir -p ${DESTDIR}
-	dpkg-deb -x ${XBPS_SRCDISTDIR}/${pkgname}-${version}/UnityHubSetup-${version}-amd64.deb ${DESTDIR}
+	mkdir -p ${wrksrc}/deb
+	dpkg-deb -x ${XBPS_SRCDISTDIR}/${pkgname}-${version}/UnityHubSetup-${version}-amd64.deb ${wrksrc}/deb
 }
 
 do_install() {
-	vlicense ${DESTDIR}/opt/unityhub/resources/hub-license.txt
-	mkdir -p ${DESTDIR}/usr/bin
+	vmkdir /opt
+	cp -r ${wrksrc}/deb/opt/unityhub ${DESTDIR}/opt/
+
+	# launcher
+	vmkdir /usr/bin
+
 	cat > ${DESTDIR}/usr/bin/unityhub << 'EOF'
 #!/bin/sh
 cd /opt/unityhub || exit 1
 exec ./unityhub-bin "$@"
 EOF
+
 	chmod +x ${DESTDIR}/usr/bin/unityhub
 	ln -sf unityhub ${DESTDIR}/usr/bin/UnityHub
-}
 
-#ignore_shlibs="libvulkan.so.1 libvips-cpp.so.8.17.2"
+	# desktop files
+	vinstall ${FILESDIR}/applications/unityhub.desktop 644 \
+    usr/share/applications
+
+	# icons
+	vcopy ${FILESDIR}/icons usr/share
+}
