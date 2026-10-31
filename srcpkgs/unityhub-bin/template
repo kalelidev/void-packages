@@ -1,6 +1,6 @@
 # Template file for 'unityhub-bin'
 pkgname=unityhub-bin
-version=3.18.0
+version=3.22.5
 revision=1
 archs="x86_64"
 hostmakedepends="dpkg tar"
@@ -10,7 +10,7 @@ maintainer="Orphaned <orphan@voidlinux.org>"
 license="custom:Proprietary"
 homepage="https://unity.com/"
 distfiles="https://hub.unity3d.com/linux/repos/deb/pool/main/u/unity/unityhub_amd64/UnityHubSetup-${version}-amd64.deb"
-checksum="24392617c00dbd6d23e4bfbdda9ad471516a0db5065e4c715193e3b4eab00e59"
+checksum="fbf711fb7f3caff1015c507c1eb5f71d1c79606522942f21e716314655321d43"
 nostrip="yes"
 noverifyrdeps="yes"
 
@@ -21,7 +21,7 @@ do_extract() {
 
 do_install() {
 	vmkdir /opt
-	cp -r ${wrksrc}/deb/opt/unityhub ${DESTDIR}/opt/
+	cp -r ${wrksrc}/deb/usr/lib/unityhub ${DESTDIR}/opt/
 
 	# launcher
 	vmkdir /usr/bin
